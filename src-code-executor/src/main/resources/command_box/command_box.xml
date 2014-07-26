@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<commandBox>
+	<!-- <language name="c">
+		<compileCmd>tcc </compileCmd>
+		<compileArg></compileArg>
+		<executeCmd></executeCmd>
+		<executeArg>.EXE</executeArg>
+		<createFolder>false</createFolder>
+		<generatedFileExtensions>.c,.EXE,.OBJ</generatedFileExtensions>
+	</language> -->
+	<language name="c">
+		<compileCmd>c++ -o #FILE_NAME </compileCmd>
+		<compileArg></compileArg>
+		<executeCmd></executeCmd>
+		<executeArg>.EXE</executeArg>
+		<createFolder>false</createFolder>
+		<generatedFileExtensions>.c,.EXE,.OBJ</generatedFileExtensions>
+	</language>
+	<language name="cpp">
+		<compileCmd>c++ -o #FILE_NAME </compileCmd>
+		<compileArg></compileArg>
+		<executeCmd></executeCmd>
+		<executeArg>.EXE</executeArg>
+		<createFolder>false</createFolder>
+		<generatedFileExtensions>.cpp,.EXE,.OBJ</generatedFileExtensions>
+	</language>
+	<language name="java">
+		<compileCmd>javac #FOLDER_NAME/</compileCmd>
+		<compileArg></compileArg>
+		<executeCmd>java -cp #FOLDER_NAME/ </executeCmd>
+		<executeArg> -Xmx10m</executeArg>
+		<createFolder>true</createFolder>
+		<generatedFileExtensions>.java,.class</generatedFileExtensions>
+	</language>
+</commandBox>
