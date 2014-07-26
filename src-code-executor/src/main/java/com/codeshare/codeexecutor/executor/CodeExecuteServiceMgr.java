@@ -44,7 +44,7 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 
 		final CodeExecuteResponse codeExecuteResponse = new CodeExecuteResponse(
 				codeExecuteRequest.getId());
-		
+
 		codeExecuteResponse.setLanguage(language.getName());
 		codeExecuteResponse.setStdin(codeExecuteRequest.getStdin());
 
@@ -58,6 +58,10 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 				compile(codeExecuteRequest, fileNameWithExtension,
 						codeExecuteResponse, language);
 
+				/**
+				 * validate whether file is created or not?
+				 */
+				// TODO
 				final boolean compilationSuccess = validateCompilation(
 						codeExecuteResponse, codeExecuteRequest);
 
@@ -65,7 +69,8 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 
 					LOGGER.debug(
 							"compilation succeeded for codeExecuteRequest id: {} , with output: {}",
-							codeExecuteRequest.getId());
+							codeExecuteRequest.getId(),
+							codeExecuteResponse.getStdout());
 
 					execute(codeExecuteRequest, fileNameWithoutExtension,
 							codeExecuteResponse, language);
