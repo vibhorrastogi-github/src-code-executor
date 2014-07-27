@@ -28,7 +28,7 @@
 		<compileCmd>javac #FOLDER_NAME/</compileCmd>
 		<compileArg></compileArg>
 		<executeCmd>java -cp #FOLDER_NAME/ </executeCmd>
-		<executeArg> -Xmx10m</executeArg>
+		<executeArg> -Xmx5m</executeArg>
 		<createFolder>true</createFolder>
 		<generatedFileExtensions>.java,.class</generatedFileExtensions>
 	</language>

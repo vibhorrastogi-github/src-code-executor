@@ -5,15 +5,6 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<context:annotation-config />
-
-	<bean id="commandBoxContainer"
-		class="com.codeshare.codeexecutor.commandbox.CommandBoxContainer" />
-
-	<bean id="codeExecuteServiceMgr"
-		class="com.codeshare.codeexecutor.executor.CodeExecuteServiceMgr" />
-
-	<bean id="cleanerExecutorService"
-		class="com.codeshare.codeexecutor.common.DeleteGenFileExecutorService" />
+	<import resource="classpath:src-code-executor-ctx.xml" />
 
 </beans>

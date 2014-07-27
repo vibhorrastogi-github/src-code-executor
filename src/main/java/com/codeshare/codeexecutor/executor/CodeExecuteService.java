@@ -111,40 +111,6 @@ public abstract class CodeExecuteService {
 		bw.close();
 	}
 
-	/*
-	 * protected void executeAndTest(final CodeExecuteRequest
-	 * codeExecuteRequest, final String fileName, final CodeExecuteResponse
-	 * codeExecuteResponse, final Language language, final Set<TestCase>
-	 * testCases) {
-	 * LOGGER.info("executing compiled code for codeExecuteRequest id: {}",
-	 * codeExecuteRequest.getId()); try { final long start_time =
-	 * System.currentTimeMillis(); final CommandInfo commandInfo =
-	 * commandBoxContainer.getComandInfo( codeExecuteRequest.getLanguage(),
-	 * CommandType.EXECUTE);
-	 * 
-	 * final String command = createCommand(commandInfo, fileName,
-	 * codeExecuteRequest, language);
-	 * 
-	 * final Process process = executeCmd(command, codeExecuteRequest);
-	 * 
-	 * executeTestCases(process, testCases, command, codeExecuteRequest,
-	 * codeExecuteResponse);
-	 * 
-	 * final boolean isProcessTimedOut = waitForProcessCompetition( process,
-	 * command, codeExecuteRequest);
-	 * 
-	 * if (isProcessTimedOut) { codeExecuteResponse
-	 * .setStdout("Process timed out after " + PROCESS_TIMEOUT_IN_MILLIS +
-	 * " ms during compilation"); return; }
-	 * 
-	 * final long end_time = System.currentTimeMillis(); final long
-	 * execution_time = end_time - start_time;
-	 * codeExecuteResponse.setExecutionTime(execution_time); } catch (final
-	 * Exception e) { throw new IllegalStateException(
-	 * "unable to execute compiled code for codeExecuteRequest id: " +
-	 * codeExecuteRequest.getId(), e); } }
-	 */
-
 	protected boolean validateCompilation(
 			final CodeExecuteResponse codeExecuteResponse,
 			final CodeExecuteRequest codeExecuteRequest) {
@@ -159,8 +125,16 @@ public abstract class CodeExecuteService {
 
 			final String output = codeExecuteResponse.getStdout().toLowerCase();
 
-			if (output.contains("error") || output.contains("fatal")
-					|| output.contains("exception")) {
+//			if (output.contains("error") || output.contains("fatal")
+//					|| output.contains("exception")) {
+//
+//				LOGGER.debug(
+//						"compilation failed for codeExecuteRequest id: {} , with output: {}",
+//						codeExecuteRequest.getId(), output);
+//
+//				compilationSuccess = false;
+//			}
+			if (output.trim().length() != 0) {
 
 				LOGGER.debug(
 						"compilation failed for codeExecuteRequest id: {} , with output: {}",
@@ -180,7 +154,7 @@ public abstract class CodeExecuteService {
 		LOGGER.info("compiling source code for codeExecuteRequest id: {}",
 				codeExecuteRequest.getId());
 		try {
-			final long startTime = System.currentTimeMillis();
+//			final long startTime = System.currentTimeMillis();
 
 			final CommandInfo commandInfo = commandBoxContainer.getComandInfo(
 					codeExecuteRequest.getLang(), CommandType.COMPILE);
@@ -204,11 +178,11 @@ public abstract class CodeExecuteService {
 
 			codeExecuteResponse.setStdout(procesOutput.toString());
 
-			final long end_time = System.currentTimeMillis();
+//			final long end_time = System.currentTimeMillis();
 
-			final long execution_time = end_time - startTime;
+//			final long execution_time = end_time - startTime;
 
-			codeExecuteResponse.setExecutionTime(execution_time);
+//			codeExecuteResponse.setExecutionTime(execution_time);
 		} catch (final Exception e) {
 			throw new IllegalStateException(
 					"unable to compile code for codeExecuteRequest id: "
