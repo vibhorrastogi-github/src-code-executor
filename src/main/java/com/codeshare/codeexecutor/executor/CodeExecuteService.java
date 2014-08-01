@@ -46,6 +46,9 @@ public abstract class CodeExecuteService {
 	@Qualifier("cleanerExecutorService")
 	protected DeleteGenFileExecutorService deleteGenFileExecutorService;
 
+	protected static final String USER_HOME_DIR = System.getProperty("user.home")
+			+ "/mysrccode/";
+
 	protected void execute(final CodeExecuteRequest codeExecuteRequest,
 			final String fileName,
 			final CodeExecuteResponse codeExecuteResponse,
@@ -73,7 +76,7 @@ public abstract class CodeExecuteService {
 					process, command, codeExecuteRequest);
 
 			if (isProcessTimedOut) {
-				codeExecuteResponse.setStdout("Process timed out after "
+				codeExecuteResponse.setStdout("Process timed  out after "
 						+ PROCESS_TIMEOUT_IN_MILLIS + " ms during execution");
 				return;
 			}
@@ -125,16 +128,17 @@ public abstract class CodeExecuteService {
 
 			final String output = codeExecuteResponse.getStdout().toLowerCase();
 
-//			if (output.contains("error") || output.contains("fatal")
-//					|| output.contains("exception")) {
-//
-//				LOGGER.debug(
-//						"compilation failed for codeExecuteRequest id: {} , with output: {}",
-//						codeExecuteRequest.getId(), output);
-//
-//				compilationSuccess = false;
-//			}
-			if (output.trim().length() != 0) {
+			if (output.trim().length() != 0
+					&& (output.contains("error") || output.contains("fatal") || output
+							.contains("exception"))) {
+
+				LOGGER.debug(
+						"compilation failed for codeExecuteRequest id: {} , with output: {}",
+						codeExecuteRequest.getId(), output);
+
+				compilationSuccess = false;
+				// }
+				// if (output.trim().length() != 0) {
 
 				LOGGER.debug(
 						"compilation failed for codeExecuteRequest id: {} , with output: {}",
@@ -154,7 +158,7 @@ public abstract class CodeExecuteService {
 		LOGGER.info("compiling source code for codeExecuteRequest id: {}",
 				codeExecuteRequest.getId());
 		try {
-//			final long startTime = System.currentTimeMillis();
+			// final long startTime = System.currentTimeMillis();
 
 			final CommandInfo commandInfo = commandBoxContainer.getComandInfo(
 					codeExecuteRequest.getLang(), CommandType.COMPILE);
@@ -178,11 +182,11 @@ public abstract class CodeExecuteService {
 
 			codeExecuteResponse.setStdout(procesOutput.toString());
 
-//			final long end_time = System.currentTimeMillis();
+			// final long end_time = System.currentTimeMillis();
 
-//			final long execution_time = end_time - startTime;
+			// final long execution_time = end_time - startTime;
 
-//			codeExecuteResponse.setExecutionTime(execution_time);
+			// codeExecuteResponse.setExecutionTime(execution_time);
 		} catch (final Exception e) {
 			throw new IllegalStateException(
 					"unable to compile code for codeExecuteRequest id: "
@@ -196,23 +200,22 @@ public abstract class CodeExecuteService {
 
 		String command = commandInfo.getCmd();
 
-		final String argument = commandInfo.getArg();
+//		final String argument = commandInfo.getArg();
 
-		if (language.isCreateFolder()) {
+//		String fullCommand = command + fileName + argument;
 
-			command = command.replaceAll("#FOLDER_NAME",
-					codeExecuteRequest.getId());
-		}
+//		command = command
+//				.replaceAll("#FOLDER_NAME", codeExecuteRequest.getId());
 
 		if (command.contains("#FILE_NAME")) {
 
 			command = command.replaceAll("#FILE_NAME",
-					codeExecuteRequest.getId());
+					fileName);
 		}
 
-		final String fullCommand = command + fileName + argument;
+		// final String fullCommand = command + fileName + argument;
 
-		return fullCommand;
+		return command;
 	}
 
 	private String readFromProcess(final Process process, final String command,
@@ -288,6 +291,8 @@ public abstract class CodeExecuteService {
 
 		pb.redirectErrorStream(true);
 
+		pb.directory(new File(USER_HOME_DIR + codeExecuteRequest.getId()));
+
 		pb.command(new String[] { "cmd", "/c", command });
 		try {
 			final Process process = pb.start();
@@ -347,25 +352,27 @@ public abstract class CodeExecuteService {
 
 		final String srcCode = codeExecuteRequest.getSrcCode();
 		try {
-			if (language.isCreateFolder()) {
-				if (!srcCode.contains("public class " + DEFAULT_CLASS_NAME)) {
-					codeExecuteResponse
-							.setStdout("invalid src code, public class "
-									+ DEFAULT_CLASS_NAME
-									+ " must exist for language: "
-									+ codeExecuteRequest.getLang());
-					return isFileSuccessfullyCreated;
-				}
+//			if (language.isCreateFolder()) {
+				// if (!srcCode.contains("public class " + DEFAULT_CLASS_NAME))
+				// {
+				// codeExecuteResponse
+				// .setStdout("invalid src code, public class "
+				// + DEFAULT_CLASS_NAME
+				// + " must exist for language: "
+				// + codeExecuteRequest.getLang());
+				// return isFileSuccessfullyCreated;
+				// }
 
 				folderName = codeExecuteRequest.getId();
 
-				final File folder = new File(folderName);
+				final File folder = new File(USER_HOME_DIR + folderName);
 
 				if (folder.exists()) {
 					folder.delete();
 				}
 				folder.mkdir();
-			}
+				folderName = folder.getAbsolutePath();
+//			}
 			final File srcCodeFile = new File(folderName + "/"
 					+ fileNameWithExtension);
 
