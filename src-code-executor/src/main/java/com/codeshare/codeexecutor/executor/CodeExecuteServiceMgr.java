@@ -21,7 +21,7 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 
 	private static final char _DOT = '.';
 
-	private static final String USER_DIR_LOC = System.getProperty("user.dir");
+//	private static final String USER_DIR_LOC = System.getProperty("user.dir");
 
 	public CodeExecuteResponse compileAndExecute(
 			final CodeExecuteRequest codeExecuteRequest) throws Exception {
@@ -55,7 +55,7 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 
 			if (isFileSuccessfullyCreated) {
 
-				compile(codeExecuteRequest, fileNameWithExtension,
+				compile(codeExecuteRequest, fileNameWithoutExtension,
 						codeExecuteResponse, language);
 
 				/**
@@ -83,7 +83,7 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 					codeExecuteRequest.getId(), e);
 			throw e;
 		} finally {
-			deleteGenFileExecutorService.deleteGeneratedFiles(USER_DIR_LOC,
+			deleteGenFileExecutorService.deleteGeneratedFiles(USER_HOME_DIR,
 					(language.isCreateFolder() ? codeExecuteRequest.getId()
 							: fileNameWithoutExtension), codeExecuteRequest
 							.getLang());
