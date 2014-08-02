@@ -29,8 +29,6 @@ public class CommandBoxContainer {
 
 	private Map<String, Language> lang_command_map;
 
-	private Map<String, Set<String>> generated_file_extentions_map;
-
 	public static void main(String[] args) {
 		new CommandBoxContainer();
 	}
@@ -52,42 +50,10 @@ public class CommandBoxContainer {
 			initCommandInfoMap(commandBox);
 			LOGGER.info("lang_command_map iniialized: {}", lang_command_map);
 
-			initFileExtentionsMap(commandBox);
-			LOGGER.info("lang_file_extentions_map iniialized: {}",
-					generated_file_extentions_map);
 		} catch (final JAXBException e) {
 			throw new IllegalStateException("unable to Command box container",
 					e);
 		}
-	}
-
-	private void initFileExtentionsMap(final CommandBox commandBox) {
-		generated_file_extentions_map = new HashMap<String, Set<String>>();
-		final Set<Language> languages = commandBox.getLanguage();
-		if (languages == null || languages.size() < 1) {
-			return;
-		}
-		for (final Language lang : languages) {
-			final String fileExtentions = lang.getGeneratedFileExtensions();
-			final Set<String> fileExtentionSet = new HashSet<String>();
-			for (String fileExtention : fileExtentions.split(",")) {
-				fileExtentionSet.add(fileExtention);
-			}
-			generated_file_extentions_map.put(lang.getName().trim()
-					.toLowerCase(), fileExtentionSet);
-		}
-	}
-
-	public Set<String> getGeneratedFileExtentionSet(final String languageName) {
-
-		final Set<String> fileExtentions = generated_file_extentions_map
-				.get(languageName);
-
-		if (fileExtentions == null) {
-			throw new IllegalArgumentException("invalid languageName: "
-					+ languageName);
-		}
-		return fileExtentions;
 	}
 
 	private void initCommandInfoMap(final CommandBox commandBox) {
@@ -113,11 +79,9 @@ public class CommandBoxContainer {
 		switch (commandType) {
 		case COMPILE:
 			commandInfo.setCmd(lang.getCompileCmd());
-			commandInfo.setArg(lang.getCompileArg());
 			break;
 		case EXECUTE:
 			commandInfo.setCmd(lang.getExecuteCmd());
-			commandInfo.setArg(lang.getExecuteArg());
 			break;
 		default:
 			throw new IllegalArgumentException("invalid commandType: "

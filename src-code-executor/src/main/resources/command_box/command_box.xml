@@ -1,30 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <commandBox>
-	<!-- <language name="c"> <compileCmd>tcc </compileCmd> <compileArg></compileArg> 
-		<executeCmd></executeCmd> <executeArg>.EXE</executeArg> <createFolder>false</createFolder> 
-		<generatedFileExtensions>.c,.EXE,.OBJ</generatedFileExtensions> </language> -->
 	<language name="c">
-		<compileCmd>c++ #FILE_NAME.c -o #FILE_NAME</compileCmd>
-		<compileArg></compileArg>
-		<executeCmd>#FILE_NAME.EXE</executeCmd>
-		<executeArg></executeArg>
-		<createFolder>true</createFolder>
-		<generatedFileExtensions>.c,.EXE,.OBJ</generatedFileExtensions>
+		<compileCmd>c++ MySrcCode.c -o MySrcCode</compileCmd>
+		<executeCmd>MySrcCode.EXE</executeCmd>
+		<patternInSrcCode></patternInSrcCode>
 	</language>
 	<language name="cpp">
-		<compileCmd>c++ #FILE_NAME.cpp -o #FILE_NAME</compileCmd>
-		<compileArg></compileArg>
-		<executeCmd>#FILE_NAME.EXE</executeCmd>
-		<executeArg></executeArg>
-		<createFolder>true</createFolder>
-		<generatedFileExtensions>.cpp,.EXE,.OBJ</generatedFileExtensions>
+		<compileCmd>c++ MySrcCode.cpp -o MySrcCode</compileCmd>
+		<executeCmd>MySrcCode.EXE</executeCmd>
+		<patternInSrcCode></patternInSrcCode>
 	</language>
 	<language name="java">
-		<compileCmd>javac #FILE_NAME.java</compileCmd>
-		<compileArg></compileArg>
-		<executeCmd>java #FILE_NAME -Xmx5m</executeCmd>
-		<executeArg></executeArg>
-		<createFolder>true</createFolder>
-		<generatedFileExtensions>.java,.class</generatedFileExtensions>
+		<compileCmd>javac MySrcCode.java</compileCmd>
+		<executeCmd>java -cp . MySrcCode -Xmx10m</executeCmd>
+		<patternInSrcCode>public class MySrcCode</patternInSrcCode>
 	</language>
 </commandBox>
