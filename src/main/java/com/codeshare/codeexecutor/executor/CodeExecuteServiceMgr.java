@@ -19,28 +19,11 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(CodeExecuteServiceMgr.class);
 
-	private static final char _DOT = '.';
-
-//	private static final String USER_DIR_LOC = System.getProperty("user.dir");
-
 	public CodeExecuteResponse compileAndExecute(
 			final CodeExecuteRequest codeExecuteRequest) throws Exception {
 
 		final Language language = commandBoxContainer
 				.getLanguage(codeExecuteRequest.getLang());
-
-		String fileNameWithoutExtension = null;
-		String fileNameWithExtension = null;
-
-		if (language.isCreateFolder()) {
-			fileNameWithoutExtension = DEFAULT_CLASS_NAME;
-			fileNameWithExtension = DEFAULT_CLASS_NAME + _DOT
-					+ language.getName();
-		} else {
-			fileNameWithoutExtension = codeExecuteRequest.getId();
-			fileNameWithExtension = codeExecuteRequest.getId() + _DOT
-					+ language.getName();
-		}
 
 		final CodeExecuteResponse codeExecuteResponse = new CodeExecuteResponse(
 				codeExecuteRequest.getId());
@@ -50,13 +33,11 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 
 		try {
 			final boolean isFileSuccessfullyCreated = createSourceCodeFile(
-					codeExecuteRequest, codeExecuteResponse,
-					fileNameWithExtension, language);
+					codeExecuteRequest, codeExecuteResponse, language);
 
 			if (isFileSuccessfullyCreated) {
 
-				compile(codeExecuteRequest, fileNameWithoutExtension,
-						codeExecuteResponse, language);
+				compile(codeExecuteRequest, codeExecuteResponse, language);
 
 				/**
 				 * validate whether file is created or not?
@@ -72,8 +53,7 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 							codeExecuteRequest.getId(),
 							codeExecuteResponse.getStdout());
 
-					execute(codeExecuteRequest, fileNameWithoutExtension,
-							codeExecuteResponse, language);
+					execute(codeExecuteRequest, codeExecuteResponse, language);
 				}
 			}
 			return codeExecuteResponse;
@@ -83,14 +63,9 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 					codeExecuteRequest.getId(), e);
 			throw e;
 		} finally {
-			deleteGenFileExecutorService.deleteGeneratedFiles(USER_HOME_DIR,
-					(language.isCreateFolder() ? codeExecuteRequest.getId()
-							: fileNameWithoutExtension), codeExecuteRequest
-							.getLang());
-		}
-	}
+			deleteGenFileExecutorService.deleteGeneratedDir(MSC_HOME_DIR,
+					codeExecuteRequest.getId());
 
-	public CodeExecuteResponse compileAndExecuteSourceCodeWithTestCases() {
-		return null;
+		}
 	}
 }

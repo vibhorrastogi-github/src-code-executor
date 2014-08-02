@@ -45,18 +45,14 @@ public class CommadBoxContainerTest {
 		language.add(lang);
 
 		lang.setCompileCmd("javac");
-		lang.setCompileArg("");
 		lang.setExecuteCmd("java");
-		lang.setExecuteArg("");
 		lang.setName("java");
 
 		lang = new Language();
 		language.add(lang);
 
 		lang.setCompileCmd("tcc");
-		lang.setCompileArg("");
 		lang.setExecuteCmd("");
-		lang.setExecuteArg("");
 		lang.setName("c");
 		return box;
 	}
