@@ -12,15 +12,17 @@ import java.io.OutputStreamWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
 import com.codeshare.codeexecutor.commandbox.CommandBoxContainer;
 import com.codeshare.codeexecutor.commandbox.Language;
 import com.codeshare.codeexecutor.common.CommandType;
 import com.codeshare.codeexecutor.common.ContentWriter;
-import com.codeshare.codeexecutor.common.DeleteGenFileExecutorService;
+import com.codeshare.codeexecutor.common.FileDeleteService;
 import com.codeshare.codeexecutor.common.bean.CodeExecuteRequest;
 import com.codeshare.codeexecutor.common.bean.CodeExecuteResponse;
 import com.codeshare.codeexecutor.common.bean.CommandInfo;
@@ -29,14 +31,15 @@ import com.codeshare.codeexecutor.common.bean.CommandInfo;
  * @author vibhor
  * 
  */
-public abstract class CodeExecuteService {
+public abstract class CodeExecuteService implements InitializingBean {
 
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(CodeExecuteService.class);
 
 	protected static final String DEFAULT_FILE_NAME = "MySrcCode";
 
-	private static final int PROCESS_TIMEOUT_IN_MILLIS = 10 * 1000;
+	@Value("${execution.process.timeout.in.millis}")
+	private int processTimeoutInMillis;
 
 	@Autowired
 	@Qualifier("commandBoxContainer")
@@ -44,21 +47,13 @@ public abstract class CodeExecuteService {
 
 	@Autowired
 	@Qualifier("cleanerExecutorService")
-	protected DeleteGenFileExecutorService deleteGenFileExecutorService;
+	protected FileDeleteService fileDeleteService;
 
-	protected static String MSC_HOME_DIR = System.getProperty("user.home")
-			+ "/msc/txFiles/";
+	@Value("${src.code.executor.transaction.file.home}")
+	protected String txnFileHome;
 
-	static {
-
-		final File mscDir = new File(MSC_HOME_DIR);
-
-		if (mscDir.exists() && mscDir.isDirectory()) {
-
-		} else {
-			mscDir.mkdirs();
-		}
-	}
+	// protected String txnFileHome = System.getProperty("user.home")
+	// + "/msc/txFiles/";
 
 	protected void execute(final CodeExecuteRequest codeExecuteRequest,
 			final CodeExecuteResponse codeExecuteResponse,
@@ -87,7 +82,7 @@ public abstract class CodeExecuteService {
 
 			if (isProcessTimedOut) {
 				codeExecuteResponse.setStdout("Process timed  out after "
-						+ PROCESS_TIMEOUT_IN_MILLIS + " ms during execution");
+						+ processTimeoutInMillis + " ms during execution");
 				return;
 			}
 
@@ -177,7 +172,7 @@ public abstract class CodeExecuteService {
 
 			if (isProcessTimedOut) {
 				codeExecuteResponse.setStdout("Process timed out after "
-						+ PROCESS_TIMEOUT_IN_MILLIS + " ms during compilation");
+						+ processTimeoutInMillis + " ms during compilation");
 				return;
 			}
 
@@ -249,7 +244,7 @@ public abstract class CodeExecuteService {
 
 		pb.redirectErrorStream(true);
 
-		pb.directory(new File(MSC_HOME_DIR + codeExecuteRequest.getId()));
+		pb.directory(new File(txnFileHome + codeExecuteRequest.getId()));
 
 		pb.command(new String[] { "cmd", "/c", command });
 
@@ -260,7 +255,7 @@ public abstract class CodeExecuteService {
 
 			LOGGER.info("pb.directory(): {}", pb.directory());
 			LOGGER.info("pb.command(): {}", pb.directory());
-//			LOGGER.info("pb.environment(): {}", pb.environment());
+			// LOGGER.info("pb.environment(): {}", pb.environment());
 			pb.inheritIO();
 
 			return process;
@@ -282,7 +277,7 @@ public abstract class CodeExecuteService {
 				command, codeExecuteRequest.getId());
 
 		final long startTime = System.currentTimeMillis();
-		final long endTime = startTime + PROCESS_TIMEOUT_IN_MILLIS;
+		final long endTime = startTime + processTimeoutInMillis;
 
 		while (isProcessAlive(process)
 				&& (System.currentTimeMillis() < endTime)) {
@@ -330,10 +325,10 @@ public abstract class CodeExecuteService {
 			}
 		}
 		try {
-			final File dir = new File(MSC_HOME_DIR + codeExecuteRequest.getId());
+			final File dir = new File(txnFileHome + codeExecuteRequest.getId());
 
 			if (dir.exists()) {
-				deleteGenFileExecutorService.deleteFile(dir);
+				fileDeleteService.delete(dir);
 
 			}
 			dir.mkdir();
@@ -342,7 +337,7 @@ public abstract class CodeExecuteService {
 					+ DEFAULT_FILE_NAME + "." + language.getName());
 
 			if (srcCodeFile.exists()) {
-				deleteGenFileExecutorService.deleteFile(srcCodeFile);
+				fileDeleteService.delete(srcCodeFile);
 			}
 			srcCodeFile.createNewFile();
 

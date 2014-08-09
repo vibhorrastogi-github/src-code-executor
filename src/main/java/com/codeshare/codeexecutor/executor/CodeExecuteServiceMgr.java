@@ -3,6 +3,8 @@
  */
 package com.codeshare.codeexecutor.executor;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,10 +64,29 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 					"unable to fulfill code execution request for codeExecuteRequest id: {}",
 					codeExecuteRequest.getId(), e);
 			throw e;
-		} finally {
-			deleteGenFileExecutorService.deleteGeneratedDir(MSC_HOME_DIR,
-					codeExecuteRequest.getId());
+		}
+		// finally {
+		// deleteGenFileExecutorService.deleteGeneratedDir(txnFileHome,
+		// codeExecuteRequest.getId());
+		//
+		// }
+	}
 
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	public void afterPropertiesSet() {
+
+		LOGGER.info("txnFileHome: {}", txnFileHome);
+
+		final File mscDir = new File(txnFileHome);
+
+		if (mscDir.exists() && mscDir.isDirectory()) {
+
+		} else {
+			mscDir.mkdirs();
 		}
 	}
 }
