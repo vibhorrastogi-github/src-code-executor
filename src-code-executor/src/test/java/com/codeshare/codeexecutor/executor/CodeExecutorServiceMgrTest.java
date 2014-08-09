@@ -36,13 +36,15 @@ public class CodeExecutorServiceMgrTest {
 		final CodeExecuteServiceMgr codeExecuteServiceMgr = ctx
 				.getBean(CodeExecuteServiceMgr.class);
 
-		loadTest(codeExecuteServiceMgr);
+//		loadTest(codeExecuteServiceMgr);
+		
+		executeCNonInputTest(codeExecuteServiceMgr);
 
 		Thread.sleep(Long.MAX_VALUE);
 		ctx.close();
 	}
 
-	private static void loadTest(
+	public static void loadTest(
 			final CodeExecuteServiceMgr codeExecuteServiceMgr) {
 
 		final AtomicInteger count = new AtomicInteger(0);
