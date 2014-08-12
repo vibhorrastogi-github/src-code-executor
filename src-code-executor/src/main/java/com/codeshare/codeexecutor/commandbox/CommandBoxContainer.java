@@ -3,17 +3,19 @@
  */
 package com.codeshare.codeexecutor.commandbox;
 
+import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.codeshare.codeexecutor.common.CommandType;
 import com.codeshare.codeexecutor.common.bean.CommandInfo;
@@ -29,30 +31,35 @@ public class CommandBoxContainer {
 
 	private Map<String, Language> lang_command_map;
 
+	@Value("${command.box.location}")
+	private String commandBoxLoc;
+
 	public static void main(String[] args) {
 		new CommandBoxContainer();
 	}
 
 	public CommandBoxContainer() {
-		init();
+		// init();
 	}
 
+	@PostConstruct
 	private void init() {
 		try {
+			LOGGER.info("commandBoxLoc: {}", commandBoxLoc);
+
 			final JAXBContext jc = JAXBContext.newInstance(CommandBox.class,
 					Language.class);
 			final Unmarshaller u = jc.createUnmarshaller();
-			final CommandBox commandBox = (CommandBox) u.unmarshal(this
-					.getClass().getClassLoader()
-					.getResourceAsStream("command_box/command_box.xml"));
+			final CommandBox commandBox = (CommandBox) u.unmarshal(new File(
+					commandBoxLoc));
 			LOGGER.info("commandBox: {}", commandBox);
 
 			initCommandInfoMap(commandBox);
 			LOGGER.info("lang_command_map iniialized: {}", lang_command_map);
 
 		} catch (final JAXBException e) {
-			throw new IllegalStateException("unable to Command box container",
-					e);
+			throw new IllegalStateException(
+					"unable to load Command box container", e);
 		}
 	}
 
