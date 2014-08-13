@@ -23,6 +23,8 @@ public class CodeExecuteResponse {
 
 	private String error;
 
+	private int handle;
+
 	public CodeExecuteResponse(String id) {
 		this.id = id;
 	}
@@ -83,12 +85,21 @@ public class CodeExecuteResponse {
 		this.error = error;
 	}
 
+	public int getHandle() {
+		return handle;
+	}
+
+	public void setHandle(int handle) {
+		this.handle = handle;
+	}
+
 	@Override
 	public String toString() {
 		return "CodeExecuteResponse [id=" + id + ", stdin=" + stdin
 				+ ", stdout=" + stdout + ", language=" + language
 				+ ", executionTime=" + executionTime + ", memoryUtilized="
-				+ memoryUtilized + ", error=" + error + "]";
+				+ memoryUtilized + ", error=" + error + ", handle=" + handle
+				+ "]";
 	}
 
 }

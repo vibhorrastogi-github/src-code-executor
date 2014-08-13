@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codeshare.codeexecutor.executor.CodeExecuteService;
-
 /**
  * @author vibhor
  * 
@@ -17,7 +15,7 @@ import com.codeshare.codeexecutor.executor.CodeExecuteService;
 public class UniqueIdUtil {
 
 	private static Logger LOGGER = LoggerFactory
-			.getLogger(CodeExecuteService.class);
+			.getLogger(UniqueIdUtil.class);
 
 	private static final int MAX_NUMBER = 9999999;
 
