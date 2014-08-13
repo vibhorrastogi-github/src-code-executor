@@ -40,7 +40,7 @@ public class CodeExecutorServiceMgrTest {
 		
 		executeCNonInputTest(codeExecuteServiceMgr);
 
-		Thread.sleep(Long.MAX_VALUE);
+//		Thread.sleep(Long.MAX_VALUE);
 		ctx.close();
 	}
 

@@ -65,11 +65,6 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 					codeExecuteRequest.getId(), e);
 			throw e;
 		}
-		// finally {
-		// deleteGenFileExecutorService.deleteGeneratedDir(txnFileHome,
-		// codeExecuteRequest.getId());
-		//
-		// }
 	}
 
 	/**
