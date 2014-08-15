@@ -7,6 +7,8 @@ import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.codeshare.codeexecutor.commandbox.Language;
 import com.codeshare.codeexecutor.common.bean.CodeExecuteRequest;
@@ -21,6 +23,12 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(CodeExecuteServiceMgr.class);
 
+	@Autowired
+	private CodeExecuteHelper helper;
+
+	@Value("${src.code.execution.success.handle}")
+	private int successHandle;
+
 	public CodeExecuteResponse compileAndExecute(
 			final CodeExecuteRequest codeExecuteRequest) throws Exception {
 
@@ -32,12 +40,13 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 
 		codeExecuteResponse.setLanguage(language.getName());
 		codeExecuteResponse.setStdin(codeExecuteRequest.getStdin());
+		codeExecuteResponse.setSuccessHandle(successHandle);
 
 		try {
-			final boolean isFileSuccessfullyCreated = createSourceCodeFile(
-					codeExecuteRequest, codeExecuteResponse, language);
+			helper.createSourceCodeFile(codeExecuteRequest,
+					codeExecuteResponse, language);
 
-			if (isFileSuccessfullyCreated) {
+			if (codeExecuteResponse.isFileCreated()) {
 
 				compile(codeExecuteRequest, codeExecuteResponse, language);
 
@@ -45,10 +54,10 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 				 * validate whether file is created or not?
 				 */
 				// TODO
-				final boolean compilationSuccess = validateCompilation(
-						codeExecuteResponse, codeExecuteRequest);
+				helper.validateCompilation(codeExecuteResponse,
+						codeExecuteRequest);
 
-				if (compilationSuccess) {
+				if (codeExecuteResponse.isCompiled()) {
 
 					LOGGER.debug(
 							"compilation succeeded for codeExecuteRequest id: {} , with output: {}",
@@ -73,7 +82,6 @@ public class CodeExecuteServiceMgr extends CodeExecuteService {
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
-
 		LOGGER.info("txnFileHome: {}", txnFileHome);
 
 		final File mscDir = new File(txnFileHome);

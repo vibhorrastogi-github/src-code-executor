@@ -25,6 +25,14 @@ public class CodeExecuteResponse {
 
 	private int handle;
 
+	private int successHandle;
+
+	private boolean isFileCreated = false;
+
+	private boolean isCompiled = false;
+
+	private boolean isExecuted = false;
+
 	public CodeExecuteResponse(String id) {
 		this.id = id;
 	}
@@ -93,13 +101,47 @@ public class CodeExecuteResponse {
 		this.handle = handle;
 	}
 
+	public int getSuccessHandle() {
+		return successHandle;
+	}
+
+	public void setSuccessHandle(int successHandle) {
+		this.successHandle = successHandle;
+	}
+
+	public boolean isFileCreated() {
+		return isFileCreated;
+	}
+
+	public void setFileCreated(boolean isFileCreated) {
+		this.isFileCreated = isFileCreated;
+	}
+
+	public boolean isCompiled() {
+		return isCompiled;
+	}
+
+	public void setCompiled(boolean isCompiled) {
+		this.isCompiled = isCompiled;
+	}
+
+	public boolean isExecuted() {
+		return isExecuted;
+	}
+
+	public void setExecuted(boolean isExecuted) {
+		this.isExecuted = isExecuted;
+	}
+
 	@Override
 	public String toString() {
 		return "CodeExecuteResponse [id=" + id + ", stdin=" + stdin
 				+ ", stdout=" + stdout + ", language=" + language
 				+ ", executionTime=" + executionTime + ", memoryUtilized="
 				+ memoryUtilized + ", error=" + error + ", handle=" + handle
-				+ "]";
+				+ ", successHandle=" + successHandle + ", isFileCreated="
+				+ isFileCreated + ", isCompiled=" + isCompiled
+				+ ", isExecuted=" + isExecuted + "]";
 	}
 
 }
