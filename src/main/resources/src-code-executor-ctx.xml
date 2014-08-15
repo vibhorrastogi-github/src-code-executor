@@ -17,6 +17,8 @@
 
 	<bean id="codeExecuteServiceMgr"
 		class="com.codeshare.codeexecutor.executor.CodeExecuteServiceMgr" />
+		
+	<bean class="com.codeshare.codeexecutor.executor.CodeExecuteHelper" />
 
 	<bean id="cleanerExecutorService" class="com.codeshare.codeexecutor.common.FileDeleteService" />
 
