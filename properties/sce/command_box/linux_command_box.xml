@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<commandBox>
+	<language name="c">
+		<compileCmd>c++ MySrcCode.c -o MySrcCode</compileCmd>
+		<executeCmd>sudo -u mycodeexec #PATH/MySrcCode</executeCmd>
+		<patternInSrcCode></patternInSrcCode>
+	</language>
+	<language name="cpp">
+		<compileCmd>c++ MySrcCode.cpp -o MySrcCode</compileCmd>
+		<executeCmd>sudo -u mycodeexec #PATH/MySrcCode</executeCmd>
+		<patternInSrcCode></patternInSrcCode>
+	</language>
+	<language name="java">
+		<compileCmd>javac MySrcCode.java</compileCmd>
+		<executeCmd>sudo -u mycodeexec java -cp . MySrcCode -Xmx10m</executeCmd>
+		<patternInSrcCode>public class MySrcCode</patternInSrcCode>
+	</language>
+</commandBox>
